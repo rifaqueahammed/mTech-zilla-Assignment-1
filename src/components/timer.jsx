@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from './firebase/configue';
+import useAuth from '../customHook/currentUser';
 
 const Timer = () => {
   const [mainTime, setMainTime] = useState(25*60); // 25 minutes in seconds
   const [breakTime, setBreakTime] = useState(5*60); // 5 minutes in seconds
   const [timerActive, setTimerActive] = useState(false);
   const [isBreak, setIsBreak] = useState(false);
-  const location = useLocation();
-  const data = location.state;
   const navigate = useNavigate();
+  const currentUser = useAuth();
+
+  useEffect(()=>{
+    console.log(currentUser)
+  })
 
   useEffect(() => {
     let interval;
@@ -68,7 +72,7 @@ const Timer = () => {
   return (
     <div className='flex flex-col justify-center items-center min-h-screen bg-gradient-to-r from-[#77C3FD] via-[#6D7CFD] to-[#B3AAFC]'>
       <button className='p-2 bg-gray-600 text-white rounded-md px-4 absolute top-10 right-10' onClick={logOut}>Logout</button>
-      <h1 className='text-3xl text-white font-bold mb-10'>Welcome {data.email} to Pomodro</h1>
+      <h1 className='text-3xl text-white font-bold mb-10'>Welcome {currentUser} to Pomodro</h1>
       <div className='w-1/2 md:w-1/4 p-5 rounded-md bg-white flex flex-col justify-center items-center gap-4 shadow-md'>
          <h1 className='text-2xl font-bold text-gray-700'>{isBreak ? 'Break Timer' : 'Main Timer'}</h1>
          <div className="timer">

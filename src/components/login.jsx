@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase/configue';
+import useAuth from '../customHook/currentUser';
 
 function Login() {
     const [email,setEmail] = useState('');
@@ -9,6 +10,13 @@ function Login() {
     const [errors,setErrors] = useState('');
     const [error,setError] = useState('');
     const navigate = useNavigate();
+    const currentUser = useAuth();
+
+    useEffect(()=>{
+      if(currentUser){
+        navigate('/timer');
+      }
+    });
 
     const submitForm = (e)=>{
     e.preventDefault();
@@ -32,11 +40,7 @@ const signIn = async ()=>{
       setPassword('');
 
       if(userCredentials.user.email){
-        navigate('/timer',{
-          state :{
-            email:userCredentials.user.email
-          }
-        });
+        navigate('/timer');
       }
     }catch{
         console.log('error')

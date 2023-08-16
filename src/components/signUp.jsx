@@ -1,13 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase/configue';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '../customHook/currentUser';
 
 function SignUp() {
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
     const [errors,setErrors] = useState({});
     const navigate = useNavigate();
+    const currentUser = useAuth();
+
+    useEffect(()=>{
+      if(currentUser){
+        navigate('/timer');
+      }
+    });
 
     const submitForm = ()=>{
         const formValues = {
@@ -29,11 +37,7 @@ function SignUp() {
           setEmail('');
           setPassword('');
           if(userCredentials.user.email){
-            navigate('/timer',{
-              state :{
-                email:userCredentials.user.email
-              }
-            });
+            navigate('/timer');
           }
         }catch{
             console.log('error')
